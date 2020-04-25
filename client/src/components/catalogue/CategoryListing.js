@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import {Link} from 'react-router-dom'
-import CollectionSmall from './CollectionSmall'
+import CategorySmall from './CategorySmall'
 import images from '../../images'
+import Header from '../Header'
+import Backtotop from '../Backtotop';
 
 const imgsMap = {
     'abstract': 'https:///img.ur/s/asdlfkasjh.png',
     'adventure': ''
 }
 
-class CollectionListing extends Component {
+class CategoryListing extends Component {
     state = { 
         categories: []
      }
@@ -62,15 +64,16 @@ class CollectionListing extends Component {
     render() { 
         return ( 
             <div className = "clp">
-                <h1>All recommended categories</h1>
+                <Header history={this.props.history}>Explore categories</Header>
                 <div className="listing">
                     {this.state.categories.map(cat => {return(
-                        <CollectionSmall link={cat.id} colTitle={cat.name} src={cat.image} />
+                        <CategorySmall id={cat.id} colTitle={cat.name} src={cat.image} />
                      )})}
                 </div>
-                </div>
+                <Backtotop/>
+            </div>
          );
     }
 }
  
-export default CollectionListing;
+export default CategoryListing;

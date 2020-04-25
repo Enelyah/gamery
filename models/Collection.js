@@ -3,7 +3,8 @@ const Schema   = mongoose.Schema;
 
 const collectionSchema = new Schema({
   colTitle: String,
-  games: [ { type: Schema.Types.ObjectId, ref: 'Game' } ],
+  //games: [ { type: Schema.Types.ObjectId, ref: 'Game' } ],
+  games: Array, // test sans référence de jeu
   creatorId: { type: Schema.Types.ObjectId, ref: 'User' }
 }, {
   timestamps: {

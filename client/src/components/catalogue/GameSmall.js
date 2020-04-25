@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import {Link} from 'react-router-dom';
 import Favorite from './Favorite'
 
+
 class GameSmall extends Component {
    state ={
      user: this.props.user
    }
     title_short = function(title, length, ending) {
         if (length == null) {
-          length = 30;
+          length = 25;
         }
         if (ending == null) {
           ending = '...';

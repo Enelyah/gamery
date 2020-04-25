@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import Loader from '../Loader.js';
 import { MyContext } from '../MyContext'
 import authService from "./auth-service.js";
+import Header from '../Header'
 
 class Profileedit extends Component {
   state = {
@@ -95,32 +96,28 @@ class Profileedit extends Component {
     if (!this.context.user._id) return <Loader></Loader>
 
     return (
-      <div className="Profile">
-        <h1>Personal informations</h1>
+      <div className="profile">
+        <Header history={this.props.history}>Edit profile</Header>
 
-      <p>
-      <form onSubmit={this.handleSubmit}>
+      <form className="flex-column" onSubmit={this.handleSubmit}>
       
-        <label>
+        <label for="image" className="flex-column center">
             <img className="avatar" src={this.context.user.image || "https://material.io/tools/icons/static/icons/baseline-person-24px.svg"} />
-            <input type="file" name="image" onChange={this.handleUpload} />
+        <input type="file" name="image" onChange={this.handleUpload}/>
         </label>
 
-        <p>
-          <input className="chp" type="text" name="username" value={this.state.username} onChange={this.handleChange} />
-        </p>
+          <input className="chp" type="text" name="username" value={this.context.user.username} onChange={this.handleChange} />
 
-        <p>
-          <input className="chp" type="text" name="email" value={this.state.email} onChange={this.handleChange} />
-        </p>
+          <input className="chp" type="text" name="email" value={this.context.user.email} onChange={this.handleChange} />
 
-        <p>
+
+
+        {/* <p>
           <input className="chp" type="password" name="password" value={this.state.password} onChange={this.handleChange} />
-        </p>
+        </p> */}
 
-        <p>
-          <select name="dep">
-            <option value="dep">--Please choose an departement--</option>
+          {/* <select name="dep" className="custom-select">
+            <option value="dep">--Please choose a departement--</option>
             <option value="00">(00) Hors France</option>
             <option value="01">(01) Ain </option>
             <option value="02">(02) Aisne </option>
@@ -224,20 +221,17 @@ class Profileedit extends Component {
             <option value="974">(974) Réunion </option>
             <option value="975">(975) Saint Pierre et Miquelon </option>
             <option value="976">(976) Mayotte </option>
-          </select>
-        </p>
+          </select> */}
 
-        <p>
         {/* <Button>save my information</Button> */}
         <button className="btn" onClick={this.handleSubmit}>save my information</button>
-        </p>
         
         <div className="cta">
         <button className="btn" onClick={this.deleteUser}>delete my account</button>
         </div>
 
         </form>
-        </p>
+  
 
       </div>
     

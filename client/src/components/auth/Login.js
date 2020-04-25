@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Header from '../Header'
 
 import {Link} from 'react-router-dom';
 //import Button from '../Button';
@@ -36,7 +37,7 @@ class Login extends Component {
   render() {
     return (
         <div className="Login">
-          <h1>Log in</h1>
+          <Header history={this.props.history}>Login</Header>
           
           <form onSubmit={this.handleSubmit}>
 

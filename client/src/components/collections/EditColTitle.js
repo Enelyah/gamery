@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Button from "../Button";
 import Signup from '../auth/Signup'
 
-class ColTitle extends Component {
+class EditColTitle extends Component {
 
     state = {
         collection: {},
@@ -65,9 +65,8 @@ class ColTitle extends Component {
           ? "modal-container modal-container-active"
           : "modal-container";
         return ( 
-          <div>
-          <Link className="flex link my-collections" to={`/${this.context.user.username}/collections/${this.state.collection._id}/${this.state.collection.colTitle}`}>
-            
+            <div>
+            <div className="flex link my-collections" to={`/${this.context.user.username}/collections/${this.state.collection._id}/${this.state.collection.colTitle}`}>
                 <div  style={{alignItems:'center', width:'90%'}}>
                     <h2 className="link relative">{this.state.colTitle}</h2>
                 </div>
@@ -84,9 +83,9 @@ class ColTitle extends Component {
               </div> :
                 <p className="link relative" style={{top:'8px'}}>❯</p>}
                 </div>
-            </Link>
+            </div>
 
-           {/* modal */}
+            {/* modal */}
 
         <div className={containerClass}>
         <div className="modal-header dark-text">
@@ -109,10 +108,10 @@ class ColTitle extends Component {
         
       </div>
       <div className={coverClass} onClick={this.modalToggle}></div>
-      </div>
+    </div>
 
             );
     }
 }
-ColTitle.contextType = MyContext;
-export default ColTitle;
+EditColTitle.contextType = MyContext;
+export default EditColTitle;

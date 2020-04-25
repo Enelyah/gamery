@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import GameMedium from './GameMedium'
 import images from '../../images'
+import Header from '../Header'
+import Backtotop from '../Backtotop';
 
-class CollectionDetailed extends Component {
+
+class CategoryDetailed extends Component {
     
     state = { 
         collection: []
@@ -29,24 +32,27 @@ class CollectionDetailed extends Component {
             <div>
                 <div className="hero-banner" style={{backgroundImage:`url(${this.img()})`}}>                
                 </div>
-                <h1>Category: {this.props.colTitle}</h1>
-
-                <div>
+                <Header history={this.props.history}>Category: {this.props.colTitle}</Header>
+                <div className="align-games-container">
+                <div className="align-games">
                     {this.state.collection.map(game => {return(
                         <GameMedium 
+                        fav={true}
                         title={game.name} 
                         img={game.images.small} 
                         id={game.id} 
                         description={game.description_preview} 
                         age={ "Age: " +  (game.min_age ? game.min_age + "+" : "Not mentioned")}
-                        rating={"Rating: " + (game.average_user_rating ? Math.round(game.average_user_rating*100)/100 +"/5":"No rating yet") } 
+                        rating={game.average_user_rating ? Math.round(game.average_user_rating*100)/100:"No rating yet"} 
                         players={game.min_players && game.max_players ? (game.min_players + " - " + game.max_players + " players") : "No players info"}/>
                      )})}
                 </div>
+                </div>
+                <Backtotop/>
             </div>
 
          );
     }
 }
  
-export default CollectionDetailed;
+export default CategoryDetailed;

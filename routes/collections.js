@@ -38,7 +38,7 @@ router.post("/", (req, res, next) => {
     res.status(401).json({message: "Login to create and manage collections"});
     return;
   }
-  const newCollection = new Collection({colTitle:req.body.colTitle, creatorId:req.user});
+  const newCollection = new Collection({colTitle:req.body.colTitle, creatorId:req.user, games: [req.body.games]});
   newCollection
     .save()
     .then((collection) => {
@@ -46,9 +46,7 @@ router.post("/", (req, res, next) => {
         req.user.id,
         { $push: { collections: collection } },
         { new: true }
-      )
-      .populate('user')
-        .then(() => {
+      )        .then(() => {
           res.status(200).json(newCollection.colTitle);
         })
         .catch(error => {
@@ -98,25 +96,27 @@ router.delete("/", (req, res, next) => {
 //     .catch(next);
 // });
 
-// test update Jenny
+// update working - Jenny
 router.put("/:id", (req, res, next) => {
   if (!req.user) {
     res.status(401).json({message: "You need to be logged in to edit your collection"});
     return;
   }
-Collection.findByIdAndUpdate(
-  { _id: req.params.id },
-  { colTitle: req.body.colTitle, games:req.body.games },
-  function(err, result) {
-    if (err) {
-      res.json(err);
-    } else {
-      res.status(201).json(result);
-    }
-  }
-)});
+  if (req.body.games){Collection.findByIdAndUpdate(req.params.id, { $push: {games: req.body.games}}, {new:true})  
+ // Collection.findByIdAndUpdate(req.params.id, req.body, {new:true})
+.then((collection)=>{
+  res.status(201).json(collection);
+})
+.catch(next);
+}
+if (req.body.colTitle){Collection.findByIdAndUpdate(req.params.id, {colTitle:req.body.colTitle}, {new:true})
+.then((collection)=>{
+  res.status(201).json(collection);
+})
+.catch(next);
+}})
 
-//ajout jeu
+//ajout jeu - on ne fait plus, trop complexe - Jenny
 
 // router.post("/api/games", (req, res, next) => {
   // console.log("coucou:"+req.body.colTitle);
@@ -153,6 +153,3 @@ Collection.findByIdAndUpdate(
 
 
 module.exports = router;
-
-// JEN UPDATE : pour pouvoir mettre à jour la collection, il faut pourvoir le créer en base pour le référencier.
-//pour pouvoir créer un jeu en base, il faut pouvoir définir à quelle collection il appartient (besoin de l'id du jeu et de l'id de la collection)

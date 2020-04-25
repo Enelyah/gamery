@@ -16,7 +16,7 @@ let images=[
     {category:"Medieval", src:"../../../images/categories/medieval.jpg"},
     {category:"Memory", src:"../../../images/categories/memory2.jpg"},
     {category:"Mythology", src:"../../../images/categories/mythology2.jpg"},
-    {category:"Party Games", src:"../../../images/categories/party2.jpg"},
+    {category:"Party Game", src:"../../../images/categories/party2.jpg"},
     {category:"Puzzle", src:"../../../images/categories/puzzle.jpg"},
     {category:"RPG", src:"../../../images/categories/rpg.jpg"},
     {category:"Sci-Fi", src:"../../../images/categories/scifi2.jpg"},

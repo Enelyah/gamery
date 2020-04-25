@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { MyContext } from "../MyContext";
 import Button from "../Button"
 import axios from 'axios'
+import Signup from "../auth/Signup";
 
 class Favorite extends Component {
   state = {
@@ -10,78 +11,64 @@ class Favorite extends Component {
     colTitle: "",
     confirmationMsg: "",
     favorite: false,
-    collections: [],
+    collections: this.context.collections,
     col_id:""
   };
 
-  componentDidMount = () => {
-    axios.create({
-      withCredentials: true
-    }).get(`${process.env.REACT_APP_APIURL || ""}/api/user/collections`)
-    .then(response => response.data)
-   //.then(data => data.map(col => col.colTitle))
-       .then(data => this.setState({collections: data}))
-    }
-
-
-
+// open or close modale
   modalToggle = () => {
     this.setState({ modalOpened: !this.state.modalOpened });
   };
 
+  //change star from white to black TODO
   updateFav = () => {
     this.setState({
       favorite: !this.state.favorite
     });
   };
 
-
-
+// add game to collection
   handleSubmit = (event) => {
     event.preventDefault();
-    
-
-    const update = axios.create({
+    const updateCol = axios.create({
       withCredentials: true
     })
+    //Get game to add game to collection - can be done with props only, not needed
+    // updateCol
+    //   .get(`https://www.boardgameatlas.com/api/search?ids=${this.props.game_id}&client_id=FWG6FKSO4N `)
+    //   .then(response => response.games)
 
-    //1. Create new collection if needed
+    //1a create new collection if any
+    if (this.state.colTitle){
+    updateCol
+      .post(  `${process.env.REACT_APP_APIURL || ""}/api/user/collections`, {
+        colTitle: this.state.colTitle, games: this.props.game_id} )
+      .then(res => res.data)
+      .catch(err => { /* not hit since no 401 */ })} else{
 
-    // if (this.state.colTitle){
-    // update
-    //   .post(  `${process.env.REACT_APP_APIURL || ""}/api/user/collections`, {
-    //     colTitle: this.state.colTitle 
-        
-    //   })
-    //   .then(res => res.data)
-    //   .then(this.componentDidMount)
-    //   .catch(err => { /* not hit since no 401 */ })}
 
-      //2. Add game to collection
-      update
-      .get(`https://www.boardgameatlas.com/api/search?ids=${this.props.game_id}&client_id=FWG6FKSO4N `)
-      .then(response => response.games)
-      // 2A create game in back (ref needed to add to collection)
-      .then( games =>
-        update.post(`${process.env.REACT_APP_APIURL || ""}/api/user/collections/${this.state.col_id}`, {
-          games:games[0]
+      // create game in back (ref needed to add to collection)
+      // .then( games =>
+      //   update.put(`${process.env.REACT_APP_APIURL || ""}/api/user/collections/${this.state.col_id}`, {
+      //     games:games[0]
+      //   })
+      //   .then(this.componentDidMount)
+      //   .catch(err => { /* not hit since no 401 */ })
+      // )
+      //.then( games =>
+
+      //1b else update existing collection with new game
+        updateCol.put(`${process.env.REACT_APP_APIURL || ""}/api/user/collections/${this.state.col_id}`, {
+          games:this.props.game_id, colTitle: this.state.colTitle
         })
-        .then(this.componentDidMount)
-        .catch(err => { /* not hit since no 401 */ })
-      )
-      //2B update collection
-      .then( data =>
-        update.put(`${process.env.REACT_APP_APIURL || ""}/api/user/collections/${this.state.col_id}`, {
-          games:{data}
-        })
-        .then(this.componentDidMount)
-        .catch(err => { /* not hit since no 401 */ })
-      )
+        .catch(err => { /* not hit since no 401 */ })}
+      //)
       
 
-    //3. Display message
+    //2. Display message
     this.setState({confirmationMsg:"Game added to collection!"});
-    //4. Close modal
+    this.updateFav();
+    //3. Close modal
     setTimeout(() => {
       //this.modalToggle() // close
       this.setState({modalOpened: false,
@@ -108,8 +95,8 @@ class Favorite extends Component {
         className="favicon"
         src={
           this.state.favorite
-            ? "/images/imagenav/baseline_star_black_48dp.png"
-            : "/images/imagenav/baseline_star_border_black_48dp.png"
+            ? "https://img.icons8.com/ios-filled/50/000000/heart-plus.png"
+            : "https://img.icons8.com/ios/50/000000/heart-plus.png"
         }
         alt=""
         onClick={this.modalToggle}
@@ -117,29 +104,34 @@ class Favorite extends Component {
               {/* modal */}
 
               <div className={containerClass}>
+              {this.context.user?
+              <div>
           <div className="modal-header dark-text">
-            <p className="">Add to collection</p>
+             <p className="modal-title">Add to collection</p>
             <hr />
           </div>
-          <form className="modal-body dark-text center flex-column" onSubmit={this.handleSubmit}>
-            <select name="col_id" id="colList" onChange={this.handleChange}>
-            {this.state.collections.map(col => {
+          <form className="modal-body dark-text flex-column" onSubmit={this.handleSubmit}>
+            <select className="custom-select margin-bottom" name="col_id" id="colList" onChange={this.handleChange}>
+            <option value="">Pick collection...</option>
+            {this.context.collections.map(col => {
               return <option value={col._id}>{col.colTitle}</option>;
             })}
             </select>
-            {/* <label htmlFor="colTitle">Or add to new collection:</label>
+            <label htmlFor="colTitle" className="modal-title">Or add to new collection:</label>
             <input
               name="colTitle"
               value={this.state.colTitle}
-              onSelect={this.handleChange}
-              className="chp-modal center"
+              onChange={this.handleChange}
+              className="chp-modal center custom-select margin-bottom"
               type="text"
-            /> */}
+            />
             <Button> Add to collection</Button>
             {/* <button className="btn" onClick={this.handleSubmit}>Confirm new collection</button> */}
             {this.state.confirmationMsg}
           </form>
-          
+          </div>
+          : <div className='center'> <h3 style={{color:'black'}}>Create an account to start saving your favorite games!</h3><Signup h1={false} black={true}/></div>}
+
         </div>
         <div className={coverClass} onClick={this.modalToggle}></div>
       </div>
